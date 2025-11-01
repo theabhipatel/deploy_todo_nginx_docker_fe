@@ -143,6 +143,11 @@ npm install
 
 MIT License
 
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+
 ---
 
 Built with ❤️ using React and TypeScript by [TheAbhiPatel](https://www.theabhipatel.com)
