@@ -145,4 +145,4 @@ MIT License
 
 ---
 
-Built with ❤️ using React and TypeScript by TheAbhiPatel
+Built with ❤️ using React and TypeScript by [TheAbhiPatel](https://www.theabhipatel.com)
