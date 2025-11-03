@@ -22,21 +22,8 @@ services:
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
-    entrypoint: >
-      sh -c "
-        set -e;
-        # Try to obtain certs on first run if missing
-        if [ ! -d /etc/letsencrypt/live/todo-app.theabhipatel.com ]; then
-          certbot certonly --webroot -w /var/www/certbot \
-            -d todo-app.theabhipatel.com -d api.todo-app.theabhipatel.com \
-            --email youremail@example.com --agree-tos --no-eff-email --non-interactive;
-        fi;
-        # Run renew loop every 6 hours (checks and renews when needed)
-        while :; do
-          certbot renew --quiet --post-hook 'docker exec nginx nginx -s reload' || true;
-          sleep 12h;
-        done
-      "
+      - ./certbot-entrypoint.sh:/entrypoint.sh:ro
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]
 
   frontend:
     build:
@@ -55,6 +42,8 @@ services:
     restart: always
     env_file:
       - .env
+    depends_on:
+      - mongo
 
   mongo:
     image: mongo:6
