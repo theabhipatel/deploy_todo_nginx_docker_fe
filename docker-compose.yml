@@ -1,56 +1,60 @@
 services:
-  nginx:
-    image: nginx:stable
-    container_name: nginx
+  # Frontend service (build from local frontend folder)
+  frontend:
+    build:
+      context: . # frontend repo root (where this compose lives)
+      dockerfile: ./Dockerfile
+    container_name: react_frontend
     restart: always
+    environment:
+      - NODE_ENV=production
+    expose:
+      - "3000"
+
+  # Backend service (build directly from backend git repo)
+  backend:
+    build:
+      context: "https://github.com/<YOUR_BACKEND_USER_OR_ORG>/<YOUR_BACKEND_REPO>.git#main"
+      dockerfile: Dockerfile
+    container_name: node_backend
+    restart: always
+    environment:
+      - NODE_ENV=production
+    expose:
+      - "5000"
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    depends_on:
+      - frontend
+      - backend
+      - certbot
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-      - ./build:/usr/share/nginx/html:ro
-    depends_on:
-      - frontend
-      - backend
+      - ./nginx/entrypoint.sh:/entrypoint.sh:ro
+      - ./nginx/templates:/etc/nginx/templates:ro
+      - certbot_certs:/etc/letsencrypt
+      - certbot_challenges:/var/www/certbot
+    env_file:
+      - .env
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]
+    restart: always
 
   certbot:
     image: certbot/certbot
-    container_name: certbot
-    restart: unless-stopped
+    container_name: certbot_ssl
     volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-      - ./certbot-entrypoint.sh:/entrypoint.sh:ro
-    entrypoint: ["/bin/sh", "/entrypoint.sh"]
-
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: frontend
-    restart: always
-    environment:
-      - NODE_ENV=production
-
-  backend:
-    build:
-      context: ../backend
-      dockerfile: Dockerfile
-    container_name: backend
-    restart: always
+      - certbot_certs:/etc/letsencrypt
+      - certbot_challenges:/var/www/certbot
+      - ./certbot/init.sh:/init.sh:ro
     env_file:
       - .env
-    depends_on:
-      - mongo
-
-  mongo:
-    image: mongo:6
-    container_name: mongo
-    restart: unless-stopped
-    volumes:
-      - mongo-data:/data/db
+    entrypoint: ["/bin/sh", "/init.sh"]
+    restart: always
 
 volumes:
-  mongo-data:
+  certbot_certs:
+  certbot_challenges:
