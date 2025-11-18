@@ -1,8 +1,8 @@
 services:
-  # Frontend service (build from local frontend folder)
+  # Frontend service
   frontend:
     build:
-      context: . # frontend repo root (where this compose lives)
+      context: .
       dockerfile: ./Dockerfile
     container_name: react_frontend
     restart: always
@@ -11,10 +11,10 @@ services:
     expose:
       - "3000"
 
-  # Backend service (build directly from backend git repo)
+  # Backend service
   backend:
     build:
-      context: "https://github.com/<YOUR_BACKEND_USER_OR_ORG>/<YOUR_BACKEND_REPO>.git#main"
+      context: ../backend
       dockerfile: Dockerfile
     container_name: node_backend
     restart: always
