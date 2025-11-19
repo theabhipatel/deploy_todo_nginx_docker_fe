@@ -23,6 +23,18 @@ services:
     expose:
       - "5000"
 
+      # MongoDB Service
+  mongo:
+    image: mongo:6
+    container_name: mongo_db
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: mydb
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+
   nginx:
     image: nginx:latest
     container_name: nginx_proxy
@@ -58,3 +70,4 @@ services:
 volumes:
   certbot_certs:
   certbot_challenges:
+  mongo_data:
