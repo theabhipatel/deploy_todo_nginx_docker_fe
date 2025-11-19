@@ -20,8 +20,7 @@ echo "🚀 Starting temporary Nginx (HTTP)..."
 nginx &
 
 echo "🕒 Waiting for SSL certificates for both domains..."
-while [ ! -d "/etc/letsencrypt/live/$FRONTEND_DOMAIN" ] || \
-      [ ! -d "/etc/letsencrypt/live/$BACKEND_DOMAIN" ]; do
+while [ ! -d "/etc/letsencrypt/live/$FRONTEND_DOMAIN" ]; do
   sleep 2
 done
 
