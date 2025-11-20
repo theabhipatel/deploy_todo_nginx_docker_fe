@@ -8,6 +8,8 @@ services:
     restart: always
     env_file:
       - .env
+    volumes:
+      - frontend_build:/usr/share/nginx/html
     expose:
       - "80"
 
@@ -50,6 +52,7 @@ services:
       - ./nginx/templates:/etc/nginx/templates:ro
       - certbot_certs:/etc/letsencrypt
       - certbot_challenges:/var/www/certbot
+      - frontend_build:/usr/share/nginx/html
     env_file:
       - .env
     entrypoint: ["/bin/sh", "/entrypoint.sh"]
@@ -71,3 +74,4 @@ volumes:
   certbot_certs:
   certbot_challenges:
   mongo_data:
+  frontend_build:
