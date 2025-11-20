@@ -4,14 +4,10 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    container_name: react_frontend
-    restart: always
     env_file:
       - .env
     volumes:
-      - frontend_build:/usr/share/nginx/html
-    expose:
-      - "80"
+      - frontend_build:/app/dist
 
   # Backend service
   backend:
