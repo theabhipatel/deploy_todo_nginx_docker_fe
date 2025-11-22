@@ -1,32 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { todoAPI, Todo, PaginationInfo } from '@/lib/api';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { LogOut, Plus, Search, Edit2, Trash2, Check, X, Loader2 } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { todoAPI, Todo, PaginationInfo } from "@/lib/api";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
+  LogOut,
+  Plus,
+  Search,
+  Edit2,
+  Trash2,
+  Check,
+  X,
+  Loader2,
+} from "lucide-react";
 
 export const DashboardPage: React.FC = () => {
   const { user, logout } = useAuth();
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [pagination, setPagination] = useState<PaginationInfo>({ page: 1, limit: 10, total: 0, pages: 0 });
-  const [search, setSearch] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [pagination, setPagination] = useState<PaginationInfo>({
+    page: 1,
+    limit: 10,
+    total: 0,
+    pages: 0,
+  });
+  const [search, setSearch] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
 
-  const fetchTodos = async (page: number = 1, searchQuery: string = '') => {
+  const fetchTodos = async (page: number = 1, searchQuery: string = "") => {
     setLoading(true);
     try {
       const response = await todoAPI.getTodos(page, 10, searchQuery);
       setTodos(response.todos);
       setPagination(response.pagination);
     } catch (error) {
-      console.error('Failed to fetch todos:', error);
+      console.error("Failed to fetch todos:", error);
     } finally {
       setLoading(false);
     }
@@ -45,28 +65,28 @@ export const DashboardPage: React.FC = () => {
     try {
       await logout();
     } catch (error) {
-      console.error('Logout failed:', error);
+      console.error("Logout failed:", error);
     }
   };
 
   const handleToggleStatus = async (todo: Todo) => {
     try {
       await todoAPI.updateTodo(todo._id, {
-        status: todo.status === 'pending' ? 'done' : 'pending',
+        status: todo.status === "pending" ? "done" : "pending",
       });
       fetchTodos(pagination.page, searchTerm);
     } catch (error) {
-      console.error('Failed to update todo:', error);
+      console.error("Failed to update todo:", error);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this todo?')) {
+    if (window.confirm("Are you sure you want to delete this todo?")) {
       try {
         await todoAPI.deleteTodo(id);
         fetchTodos(pagination.page, searchTerm);
       } catch (error) {
-        console.error('Failed to delete todo:', error);
+        console.error("Failed to delete todo:", error);
       }
     }
   };
@@ -86,7 +106,7 @@ export const DashboardPage: React.FC = () => {
               <div className="bg-primary rounded-lg p-2">
                 <Check className="h-5 w-5 text-primary-foreground" />
               </div>
-              <h1 className="text-xl font-bold text-gray-900">Todo App</h1>
+              <h1 className="text-xl font-bold text-gray-900">Todo App V2</h1>
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-700">Hi, {user?.name}</span>
@@ -106,7 +126,9 @@ export const DashboardPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
               <h2 className="text-3xl font-bold text-gray-900">My Todos</h2>
-              <p className="text-gray-600 mt-1">Manage your tasks efficiently</p>
+              <p className="text-gray-600 mt-1">
+                Manage your tasks efficiently
+              </p>
             </div>
             <Button onClick={() => setIsAddModalOpen(true)}>
               <Plus className="h-4 w-4 mr-2" />
@@ -133,8 +155,8 @@ export const DashboardPage: React.FC = () => {
                   type="button"
                   variant="outline"
                   onClick={() => {
-                    setSearch('');
-                    setSearchTerm('');
+                    setSearch("");
+                    setSearchTerm("");
                   }}
                 >
                   Clear
@@ -159,8 +181,8 @@ export const DashboardPage: React.FC = () => {
                 <h3 className="text-xl font-semibold mb-2">No todos yet</h3>
                 <p className="text-gray-600 mb-6">
                   {searchTerm
-                    ? 'No todos found matching your search.'
-                    : 'Get started by creating your first todo!'}
+                    ? "No todos found matching your search."
+                    : "Get started by creating your first todo!"}
                 </p>
                 {!searchTerm && (
                   <Button onClick={() => setIsAddModalOpen(true)}>
@@ -175,28 +197,31 @@ export const DashboardPage: React.FC = () => {
           <>
             <div className="grid gap-4">
               {todos.map((todo) => (
-                <Card key={todo._id} className="hover:shadow-md transition-shadow">
+                <Card
+                  key={todo._id}
+                  className="hover:shadow-md transition-shadow"
+                >
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between">
                       <div className="flex items-start space-x-4 flex-1">
                         <button
                           onClick={() => handleToggleStatus(todo)}
                           className={`mt-1 flex-shrink-0 h-5 w-5 rounded border-2 flex items-center justify-center transition-colors ${
-                            todo.status === 'done'
-                              ? 'bg-primary border-primary'
-                              : 'border-gray-300 hover:border-primary'
+                            todo.status === "done"
+                              ? "bg-primary border-primary"
+                              : "border-gray-300 hover:border-primary"
                           }`}
                         >
-                          {todo.status === 'done' && (
+                          {todo.status === "done" && (
                             <Check className="h-3 w-3 text-white" />
                           )}
                         </button>
                         <div className="flex-1 min-w-0">
                           <h3
                             className={`text-lg font-semibold ${
-                              todo.status === 'done'
-                                ? 'line-through text-gray-500'
-                                : 'text-gray-900'
+                              todo.status === "done"
+                                ? "line-through text-gray-500"
+                                : "text-gray-900"
                             }`}
                           >
                             {todo.title}
@@ -207,7 +232,11 @@ export const DashboardPage: React.FC = () => {
                             </p>
                           )}
                           <div className="flex items-center gap-3 mt-3">
-                            <Badge variant={todo.status === 'done' ? 'secondary' : 'default'}>
+                            <Badge
+                              variant={
+                                todo.status === "done" ? "secondary" : "default"
+                              }
+                            >
                               {todo.status}
                             </Badge>
                             <span className="text-xs text-gray-500">
@@ -300,28 +329,28 @@ const AddTodoModal: React.FC<{
   onClose: () => void;
   onSuccess: () => void;
 }> = ({ open, onClose, onSuccess }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [error, setError] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (!title.trim()) {
-      setError('Title is required');
+      setError("Title is required");
       return;
     }
 
     setLoading(true);
     try {
       await todoAPI.createTodo({ title, description });
-      setTitle('');
-      setDescription('');
+      setTitle("");
+      setDescription("");
       onSuccess();
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to create todo');
+      setError(err.response?.data?.message || "Failed to create todo");
     } finally {
       setLoading(false);
     }
@@ -375,7 +404,7 @@ const AddTodoModal: React.FC<{
               Cancel
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? 'Creating...' : 'Create Todo'}
+              {loading ? "Creating..." : "Create Todo"}
             </Button>
           </div>
         </form>
@@ -392,17 +421,17 @@ const EditTodoModal: React.FC<{
   onSuccess: () => void;
 }> = ({ open, todo, onClose, onSuccess }) => {
   const [title, setTitle] = useState(todo.title);
-  const [description, setDescription] = useState(todo.description || '');
+  const [description, setDescription] = useState(todo.description || "");
   const [status, setStatus] = useState(todo.status);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (!title.trim()) {
-      setError('Title is required');
+      setError("Title is required");
       return;
     }
 
@@ -411,7 +440,7 @@ const EditTodoModal: React.FC<{
       await todoAPI.updateTodo(todo._id, { title, description, status });
       onSuccess();
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to update todo');
+      setError(err.response?.data?.message || "Failed to update todo");
     } finally {
       setLoading(false);
     }
@@ -422,9 +451,7 @@ const EditTodoModal: React.FC<{
       <DialogContent onClose={onClose}>
         <DialogHeader>
           <DialogTitle>Edit Todo</DialogTitle>
-          <DialogDescription>
-            Update your task details.
-          </DialogDescription>
+          <DialogDescription>Update your task details.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           {error && (
@@ -467,7 +494,7 @@ const EditTodoModal: React.FC<{
             <select
               id="edit-status"
               value={status}
-              onChange={(e) => setStatus(e.target.value as 'pending' | 'done')}
+              onChange={(e) => setStatus(e.target.value as "pending" | "done")}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               <option value="pending">Pending</option>
@@ -479,7 +506,7 @@ const EditTodoModal: React.FC<{
               Cancel
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? 'Updating...' : 'Update Todo'}
+              {loading ? "Updating..." : "Update Todo"}
             </Button>
           </div>
         </form>
