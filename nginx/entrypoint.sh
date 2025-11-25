@@ -17,7 +17,7 @@ sed \
   "$HTTP_TEMPLATE" > "$CONF_PATH"
 
 echo "🚀 Starting temporary Nginx (HTTP)..."
-nginx &
+nginx
 
 echo "🕒 Waiting for SSL certificates for both domains..."
 while [ ! -d "/etc/letsencrypt/live/$FRONTEND_DOMAIN" ]; do
@@ -30,5 +30,11 @@ sed \
   -e "s/{{BACKEND_DOMAIN}}/$BACKEND_DOMAIN/g" \
   "$HTTPS_TEMPLATE" > "$CONF_PATH"
 
-nginx -s quit || true
-nginx -g "daemon off;"
+nginx -s quit
+
+# wait until nginx fully shuts down
+while pgrep nginx >/dev/null; do
+  sleep 1
+done
+
+exec nginx -g "daemon off;"
