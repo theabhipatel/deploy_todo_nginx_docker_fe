@@ -40,7 +40,7 @@ services:
       context: .
     container_name: nginx_proxy
     depends_on:
-      - frontend
+      # - frontend
       - backend
       - certbot
     ports:
