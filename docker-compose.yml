@@ -36,7 +36,8 @@ services:
       - "27017:27017"
 
   nginx:
-    image: nginx:latest
+    build:
+      context: .
     container_name: nginx_proxy
     depends_on:
       - frontend
