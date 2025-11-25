@@ -1,15 +1,15 @@
 services:
   # Frontend service
-  frontend:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    container_name: react_frontend
-    restart: always
-    env_file:
-      - .env
-    expose:
-      - "80"
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: ./Dockerfile
+  #   container_name: react_frontend
+  #   restart: always
+  #   env_file:
+  #     - .env
+  #   expose:
+  #     - "80"
 
   # Backend service
   backend:
