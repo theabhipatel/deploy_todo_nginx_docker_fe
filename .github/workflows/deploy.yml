@@ -25,4 +25,4 @@ jobs:
         with:
           host: ${{secrets.EC2_HOST}}
           username: ${{secrets.EC2_USER}}
-          key: ${{secrest.EC2_KEY}}
+          key: ${{secrets.EC2_KEY}}
