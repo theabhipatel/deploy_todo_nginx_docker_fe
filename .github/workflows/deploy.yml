@@ -76,7 +76,7 @@ jobs:
               echo "${{ secrets.FRONTEND_ENV_FILE}}" > .env
 
               echo "🐟 Installing docker using install-docker.sh..."
-              chomod +x install-docker.sh
+              chmod +x install-docker.sh
               ./install-docker.sh
 
               echo "🚀 Running application for the first time..."
