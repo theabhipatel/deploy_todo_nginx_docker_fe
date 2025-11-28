@@ -26,3 +26,63 @@ jobs:
           host: ${{secrets.EC2_HOST}}
           username: ${{secrets.EC2_USER}}
           key: ${{secrets.EC2_KEY}}
+          script: | 
+            set -e
+            APP_DIR=~/todo_app
+
+            echo "===== Checking if application is already installed ===="
+
+            if [ -d "$APP_DIR" ]; then
+              echo "🟨 App directory exists - updating application..."
+
+              cd $APP_DIR/frontend
+
+              echo "👉 Pulling lastest code in frontend"
+              git fetch origin production
+              git reset --hard origin/production
+
+              echo "🟢 Updating .env from Github secret..."
+              if [ -f ".env" ]; then
+                cp .env .env.backup_$(date +%s)
+              fi
+              echo "${{ secrets.FRONTEND_ENV_FILE }}" > .env
+
+              echo "🚀 Rebuilding and restarting application..."
+              docker compose up --build -d
+
+              echo "🧹 Cleaning up unused images..."
+              docker image prune -f
+
+              echo "✅ Frontend update complete!"
+            else
+              echo "🟨 App not found - running first-time setup..."
+
+              echo "📂 Creating app directory..."
+              mkdir -p $APP_DIR
+              cd $APP_DIR
+
+              echo "🧲 Clong frontend repository..."
+              git clone https://github.com/${{ github.repository }} frontend
+
+              echo "🧲 Clong backend repository..."
+              git clone https://github.com/${{ github.repository_owner }}/${{ secrets.BACKEND_REPO_NAME }} backend
+
+              echo "👉 Creating .env file in backend..."
+              cd backend 
+              echo "${{ secrets.BACKEND_ENV_FILE}}" > .env
+
+              echo "👉 Creating .env file in frontend..."
+              cd ../frontend
+              echo "${{ secrets.FRONTEND_ENV_FILE}}" > .env
+
+              echo "🐟 Installing docker using install-docker.sh..."
+              chomod +x install-docker.sh
+              ./install-docker.sh
+
+              echo "🚀 Running application for the first time..."
+              sudo docker compose up --build -d
+
+              echo "🎉 First-time setup completed successfully!"
+            fi
+
+
