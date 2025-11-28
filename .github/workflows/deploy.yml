@@ -45,7 +45,7 @@ jobs:
               if [ -f ".env" ]; then
                 cp .env .env.backup_$(date +%s)
               fi
-              echo "${{ secrets.ENV_FILE }}" > .env
+              echo "${{ secrets.FRONTEND_ENV_FILE }}" > .env
 
               echo "🚀 Rebuilding and restarting application..."
               docker compose up --build -d
@@ -65,7 +65,7 @@ jobs:
               git clone https://github.com/${{ github.repository }} frontend
 
               echo "🧲 Clong backend repository..."
-              git clone https://github.com/${{ secrets.BACKEND_REPO_NAME }} backend
+              git clone https://github.com/${{ github.repository_owner }}/${{ secrets.BACKEND_REPO_NAME }} backend
 
               echo "👉 Creating .env file in backend..."
               cd backend 
