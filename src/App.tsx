@@ -11,7 +11,7 @@ import { SignupPage } from "./pages/SignupPage";
 import { DashboardPage } from "./pages/DashboardPage";
 
 function App() {
-  // re trigger the build
+  // re trigger the build 1
   return (
     <Router>
       <AuthProvider>
