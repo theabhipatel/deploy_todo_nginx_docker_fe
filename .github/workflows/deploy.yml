@@ -67,6 +67,11 @@ jobs:
               echo "🧲 Clong backend repository..."
               git clone https://github.com/${{ github.repository_owner }}/${{ secrets.BACKEND_REPO_NAME }} backend
 
+              cd backend
+              echo "👉 Switching to production branch..."
+              git fetch origin production
+              git checkout production
+
               echo "👉 Creating .env file in backend..."
               cd backend 
               echo "${{ secrets.BACKEND_ENV_FILE}}" > .env
