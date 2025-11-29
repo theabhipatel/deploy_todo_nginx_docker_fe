@@ -61,10 +61,10 @@ jobs:
               mkdir -p $APP_DIR
               cd $APP_DIR
 
-              echo "🧲 Clong frontend repository..."
+              echo "🧲 Cloning frontend repository..."
               git clone https://github.com/${{ github.repository }} frontend
 
-              echo "🧲 Clong backend repository..."
+              echo "🧲 Cloning backend repository..."
               git clone https://github.com/${{ github.repository_owner }}/${{ secrets.BACKEND_REPO_NAME }} backend
 
               cd backend
@@ -73,7 +73,6 @@ jobs:
               git checkout production
 
               echo "👉 Creating .env file in backend..."
-              cd backend 
               echo "${{ secrets.BACKEND_ENV_FILE}}" > .env
 
               echo "👉 Creating .env file in frontend..."
