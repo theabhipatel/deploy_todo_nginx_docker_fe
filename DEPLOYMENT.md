@@ -61,7 +61,7 @@ api.yourdomain.com → <EC2_PUBLIC_IP>
 
 ### ✔ 6. Create `.env` files for frontend & backend ([more](#-environment-variables-env-setup))
 
-### ✔ 7. Add GitHub Secrets ([more](#-required-github-secrets))
+### ✔ 7. Add GitHub Secrets ([more](#-add-these-to-frontend-repo-github-secrets))
 
 ### ✔ 8. Use the `production` branch for deployment  
 Every push to `production` triggers the GitHub Actions workflow and deploys your app automatically.
