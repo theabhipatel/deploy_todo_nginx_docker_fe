@@ -109,6 +109,7 @@ Your app gets deployed in under **2 minutes** with minimal manual work.
 ---
 
 # 🔧 Environment Variables (`.env` Setup)
+Before deploying, create a .env file in respective dir using .env.example file or the template below:
 
 ### Backend `.env` example:
 ```
@@ -133,7 +134,23 @@ EMAIL=your-email@gmail.com
 VITE_API_URL=https://api.todo-domain.com/api
 ```
 
-### Add these to GitHub Secrets:
+
+Then:
+
+1. Copy the content of your `.env` file respectively for frontend and backend 
+2. Go to GitHub → Repository → **Settings → Secrets → Actions**  
+3. Create a secret named for frontend:
+```
+ENV_FILE_FRONTEND 
+```
+Paste your `.env` content 
+4. Create a secret named for backend:
+```
+ENV_FILE_BACKEND 
+```
+Paste your `.env` content 
+
+### 🔐 Add these to Frontend repo GitHub Secrets:
 
 | Secret Name | Description |
 |-------------|-------------|
@@ -143,6 +160,15 @@ VITE_API_URL=https://api.todo-domain.com/api
 | **ENV_FILE_BACKEND** | Backend `.env` content |
 | **ENV_FILE_FRONTEND** | Frontend `.env` content |
 | **BACKEND_REPO_NAME** | Backend repo name only. eg `deploy_todo_nginx_docker_be` |
+
+### 🔐 Add these to Backend repo GitHub Secrets:
+
+| Secret Name | Description |
+|-------------|-------------|
+| **EC2_HOST** | EC2 server IP |
+| **EC2_USER** | `ubuntu` |
+| **EC2_SSH_KEY** | Private SSH key |
+| **ENV_FILE_BACKEND** | Backend `.env` content |
 
 ---
 
