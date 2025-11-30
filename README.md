@@ -11,7 +11,7 @@ A modern, responsive Todo application frontend built with React, TypeScript, and
 - 🎨 Modern UI with Tailwind CSS and shadcn/ui
 - 📱 Fully responsive design
 - ⚡ Built with Vite for fast development
-- 🚀 Single command deployment to any ubutnu server ( See full guide [DEPLOYMENT.md]("https://github.com/theabhipatel/deploy_todo_nginx_docker_fe/blob/master/DEPLOYMENT.md) )
+- 🚀 Single command deployment to any ubutnu server ( See full guide [DEPLOYMENT.md](https://github.com/theabhipatel/deploy_todo_nginx_docker_fe/blob/master/DEPLOYMENT.md) )
 
 ## 🛠 Tech Stack
 
