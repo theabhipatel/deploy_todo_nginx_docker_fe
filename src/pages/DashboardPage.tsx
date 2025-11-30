@@ -106,7 +106,7 @@ export const DashboardPage: React.FC = () => {
               <div className="bg-primary rounded-lg p-2">
                 <Check className="h-5 w-5 text-primary-foreground" />
               </div>
-              <h1 className="text-xl font-bold text-gray-900">Todo App V5</h1>
+              <h1 className="text-xl font-bold text-gray-900">Todo App V1</h1>
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-700">Hi, {user?.name}</span>
