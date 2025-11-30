@@ -1,5 +1,5 @@
-# 🚀 One-Command MERN Todo App Deployment on Any Server
-This project provides a **fully automated**, production-ready CI/CD setup for deploying a **MERN Todo Application** (Frontend + Backend) with Domain & Auto SSL on any Ubuntu server using **Docker, Docker Compose, Nginx, Certbot SSL**, and **GitHub Actions**.
+# 🚀 Single Command MERN App Deployment on Any Server
+This project provides a **fully automated**, production-ready CI/CD setup for deploying a **MERN Application** (Frontend + Backend) with Domain & Auto SSL on any Ubuntu server (I will use EC2 instance) using **Docker, Docker Compose, Nginx, Certbot SSL**, and **GitHub Actions**.
 
 Just **push your code to the `production` branch** — your server will automatically install everything, configure itself, build both repos, and deploy the updated application.
 
@@ -38,32 +38,36 @@ Deployment is **100% handled by GitHub Actions**.
 
 # 🧑‍💻 What You Need To Do Manually (Only Once)
 
-### ✔ 1. Clone both repositories (optional for local development)
+### ✔ 1. Clone both repositories
+Update the application code or keep it as-is for testing.
 ```
-git clone <frontend-repo>
-git clone <backend-repo>
+git clone https://github.com/theabhipatel/deploy_todo_nginx_docker_fe.git
+git clone https://github.com/theabhipatel/deploy_todo_nginx_docker_be.git
 ```
 
-### ✔ 2. Create a new SSH key pair (See SSH Setup section)
+### ✔ 2. Create a new SSH key pair ([more](#-ssh-key-setup))
 
 ### ✔ 3. Create an Ubuntu VPS / AWS EC2 instance
 
-### ✔ 4. Add your SSH public key to the server
+### ✔ 4. Add your SSH public key to the server ([more](#-ssh-key-setup))
 
 ### ✔ 5. Point your domain to your EC2
 Add DNS “A Records”:
 
 ```
-api.yourdomain.com → <EC2_PUBLIC_IP>
 yourdomain.com → <EC2_PUBLIC_IP>
+api.yourdomain.com → <EC2_PUBLIC_IP>
 ```
 
-### ✔ 6. Create `.env` files for frontend & backend (See next section)
+### ✔ 6. Create `.env` files for frontend & backend ([more](#-environment-variables-env-setup))
 
-### ✔ 7. Add GitHub Secrets
+### ✔ 7. Add GitHub Secrets ([more](#-required-github-secrets))
 
 ### ✔ 8. Use the `production` branch for deployment  
-Push/merge updates → GitHub Action runs → App deploys automatically.
+Every push to `production` triggers the GitHub Actions workflow and deploys your app automatically.
+
+That’s it. 🎉  
+Your app gets deployed in under **2 minutes** with minimal manual work.
 
 ---
 
@@ -81,8 +85,11 @@ Push/merge updates → GitHub Action runs → App deploys automatically.
   │   │       ├── http.template
   │   │       ├── https.template
   │   ├── .env.example
-  │   └── React/Tailwind app code...
-  │
+  │   ├── React/Tailwind app code...
+  │   └── .github/
+  │       └── workflows/
+  │           └── deploy.yml      ← Frontend GitHub Actions workflow
+
   ├── backend/
   │   ├── docker-compose.yml
   │   ├── Dockerfile
@@ -93,11 +100,10 @@ Push/merge updates → GitHub Action runs → App deploys automatically.
   │   │       ├── http.template
   │   │       ├── https.template
   │   ├── .env.example
-  │   └── Node/Express/MongoDB code...
-  │
-  ├── .github/
-  │   └── workflows/
-  │       └── deploy.yml
+  │   ├── Node/Express/MongoDB code...
+  │   └── .github/
+  │       └── workflows/
+  │           └── deploy.yml      ← Backend GitHub Actions workflow
 ```
 
 ---
@@ -107,14 +113,24 @@ Push/merge updates → GitHub Action runs → App deploys automatically.
 ### Backend `.env` example:
 ```
 PORT=5000
-MONGO_URI=mongodb+srv://...
-JWT_SECRET=your_secret_key
-CLIENT_URL=https://yourdomain.com
+# MONGODB_URI=mongodb://localhost:27017/todo-app # local db url
+MONGODB_URI=mongodb://mongo:27017/tododb # docker container url
+JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
+JWT_REFRESH_SECRET=your_super_secret_refresh_key_change_this_in_production
+JWT_EXPIRE=15m
+JWT_REFRESH_EXPIRE=7d
+NODE_ENV=development
+FRONTEND_URL=http://localhost:5173
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 ```
 
 ### Frontend `.env` example:
 ```
-VITE_API_URL=https://api.yourdomain.com
+FRONTEND_DOMAIN=todo-domain.com
+BACKEND_DOMAIN=api.todo-domain.com
+DOMAINS=todo-domain.com,api.todo-domain.com
+EMAIL=your-email@gmail.com
+VITE_API_URL=https://api.todo-domain.com/api
 ```
 
 ### Add these to GitHub Secrets:
@@ -126,6 +142,7 @@ VITE_API_URL=https://api.yourdomain.com
 | **EC2_SSH_KEY** | Private SSH key |
 | **ENV_FILE_BACKEND** | Backend `.env` content |
 | **ENV_FILE_FRONTEND** | Frontend `.env` content |
+| **BACKEND_REPO_NAME** | Backend repo name only. eg `deploy_todo_nginx_docker_be` |
 
 ---
 
@@ -179,7 +196,8 @@ You get a full **MERN stack deployment pipeline** with:
 - GitHub Actions  
 - EC2 / Ubuntu  
 
-Write code → Push → Your Todo App goes live. 🚀
+Write code → Push (production) → Your Todo App goes live. 🚀
+That's it. 💯
 
 ---
 
